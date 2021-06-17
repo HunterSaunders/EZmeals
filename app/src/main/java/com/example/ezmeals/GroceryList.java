@@ -5,25 +5,38 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class GroceryList extends AppCompatActivity {
+
+    ////////
+    List<String> groceryList;
+    ArrayAdapter<String> arrayAdapter;
+    ListView listView;
+    ////////
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_grocery_list);
         getSupportActionBar().setTitle("My Grocery List");
-
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_nav);
         bottomNavigationView.setSelectedItemId(android.R.id.home);
@@ -45,6 +58,27 @@ public class GroceryList extends AppCompatActivity {
                 return false;
             }
         });
+        ////////
+        groceryList = new ArrayList<>();
+        arrayAdapter = new ArrayAdapter<>(this, R.layout.grocery_view_layout, groceryList);
+        listView = findViewById(R.id.grocery_list_view);
+        listView.setAdapter(arrayAdapter);
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                TextView textView = (TextView) view;
+
+                if(!textView.getPaint().isStrikeThruText()){
+                    textView.setPaintFlags(textView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+                    textView.setTextColor(Color.argb(50,0,0,0));
+                } else{
+                    textView.setPaintFlags(textView.getPaintFlags() & (~ Paint.STRIKE_THRU_TEXT_FLAG));
+                    textView.setTextColor(Color.rgb(0,0,0));
+                }
+            }
+        });
+        ////////
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu){
@@ -95,7 +129,11 @@ public class GroceryList extends AppCompatActivity {
         save_new_item.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Create Save Method Here
+                groceryList.add(new_item_name.getText().toString());
+                System.out.println(groceryList);
+                arrayAdapter.notifyDataSetChanged();
+                new_item_name.setText("");
+                dialog.dismiss();
             }
         });
         cancel_item_window.setOnClickListener(new View.OnClickListener() {
@@ -121,7 +159,10 @@ public class GroceryList extends AppCompatActivity {
         clear_items.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Create Clear Method Here
+                groceryList.clear();
+                dialog.dismiss();
+                arrayAdapter.notifyDataSetChanged();
+                System.out.println(groceryList);
             }
         });
         cancel_clear_window.setOnClickListener(new View.OnClickListener() {
