@@ -16,7 +16,7 @@ import android.widget.TextView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-public class GroceryListFragment extends AppCompatActivity {
+public class GroceryList extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,7 +36,7 @@ public class GroceryListFragment extends AppCompatActivity {
                         overridePendingTransition(0,0);
                         return true;
                     case R.id.search:
-                        startActivity(new Intent(getApplicationContext(), SearchAPIFragment.class));
+                        startActivity(new Intent(getApplicationContext(), SearchAPI.class));
                         overridePendingTransition(0,0);
                         return true;
                     case R.id.list:

@@ -9,7 +9,7 @@ import android.view.MenuItem;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-public class SearchAPIFragment extends AppCompatActivity {
+public class SearchAPI extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,7 +30,7 @@ public class SearchAPIFragment extends AppCompatActivity {
                     case R.id.search:
                         return true;
                     case R.id.list:
-                        startActivity(new Intent(getApplicationContext(), GroceryListFragment.class));
+                        startActivity(new Intent(getApplicationContext(), GroceryList.class));
                         overridePendingTransition(0,0);
                         return true;
                 }

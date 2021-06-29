@@ -26,7 +26,7 @@ public class Home extends AppCompatActivity {
         recipeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getApplicationContext(), SearchAPIFragment.class));
+                startActivity(new Intent(getApplicationContext(), SearchAPI.class));
                 overridePendingTransition(0,0);
             }
         });
@@ -34,7 +34,7 @@ public class Home extends AppCompatActivity {
         listBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getApplicationContext(), GroceryListFragment.class));
+                startActivity(new Intent(getApplicationContext(), GroceryList.class));
                 overridePendingTransition(0,0);
             }
         });
@@ -48,11 +48,11 @@ public class Home extends AppCompatActivity {
                     case R.id.home:
                         return true;
                     case R.id.search:
-                        startActivity(new Intent(getApplicationContext(), SearchAPIFragment.class));
+                        startActivity(new Intent(getApplicationContext(), SearchAPI.class));
                         overridePendingTransition(0,0);
                         return true;
                     case R.id.list:
-                        startActivity(new Intent(getApplicationContext(), GroceryListFragment.class));
+                        startActivity(new Intent(getApplicationContext(), GroceryList.class));
                         overridePendingTransition(0,0);
                         return true;
                 }
