@@ -9,8 +9,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.EZmeals">
-        <activity android:name=".GroceryList"></activity>
-        <activity android:name=".SearchAPI" />
+        <activity android:name=".GroceryListFragment"></activity>
+        <activity android:name=".SearchAPIFragment" />
         <activity android:name=".Home" />
         <activity android:name=".MainActivity">
             <intent-filter>

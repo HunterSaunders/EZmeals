@@ -10,18 +10,25 @@ import android.os.Handler;
 import com.google.gson.Gson;
 
 import java.util.List;
+import java.util.Properties;
 
 public class MainActivity extends AppCompatActivity {
 
     private static int SPLASH_SCREEN_TIME_OUT = 4000;
-    private static final String TAG = "MainActivity";
-//    private final String key = getString(R.string.api_key); //api key from resource file: res/values/secrets.xml
-//    private final String appId = getString(R.string.app_id); //app id from resource file: res/values/secrets.xml
-//    private final String searchTerms = "chicken%20soup"; //How do you add multiple search terms? Add them to a list? This is here for testing purposes
-//    private final String baseUrl = "https://api.edamam.com/api/recipes/v2?type=public&q=";
-//    private final String url = baseUrl + searchTerms + "&app_id=" + appId + "&app_key=" + key;
+
+    //Get key and app id from properties
+
+    Properties properties = new Properties();
+
+    private final String key = properties.getProperty("api_key");
+    private final String appId = properties.getProperty("app_id");
+    private final String searchTerms = "chicken%20soup"; //How do you add multiple search terms? Have this value here for testing purposes
+    private final String baseUrl = "https://api.edamam.com/api/recipes/v2?type=public&q=";
+    final String url = baseUrl + searchTerms + "&app_id=" + appId + "&app_key=" + key;
+
     private Gson gson;
     private HTTPHelper httpHelper;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
