@@ -10,8 +10,10 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -23,6 +25,18 @@ public class GroceryList extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_grocery_list);
         getSupportActionBar().setTitle("My Grocery List");
+
+        //This is for the list view in the grocery list activity
+
+        String[] groceryList = {"Bread","Milk","Eggs","Sugar","Apples","Carrots","Yogurt","Broccoli","Celery","Ice Cream",
+                                "Lettuce","Bacon"}; //this list used to test the list view in grocery list activity
+
+        ArrayAdapter adapter = new ArrayAdapter<String>(this, R.layout.textview_grocerylist, groceryList);
+
+        ListView listView = (ListView) findViewById(R.id.groceryList);
+        listView.setAdapter(adapter);
+
+
 
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_nav);
