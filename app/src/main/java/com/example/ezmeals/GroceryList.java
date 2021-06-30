@@ -18,7 +18,14 @@ import android.widget.TextView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import java.util.ArrayList;
+
 public class GroceryList extends AppCompatActivity {
+
+//    String[] groceryList = {"Bread","Milk","Eggs","Sugar","Apples","Carrots","Yogurt","Broccoli","Celery","Ice Cream",
+//            "Lettuce","Bacon"}; //this list used to test the list view in grocery list activity
+//
+//    ArrayList<EditText> groceryListArray = new ArrayList<EditText>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,15 +33,12 @@ public class GroceryList extends AppCompatActivity {
         setContentView(R.layout.activity_grocery_list);
         getSupportActionBar().setTitle("My Grocery List");
 
-        //This is for the list view in the grocery list activity
-
-        String[] groceryList = {"Bread","Milk","Eggs","Sugar","Apples","Carrots","Yogurt","Broccoli","Celery","Ice Cream",
-                                "Lettuce","Bacon"}; //this list used to test the list view in grocery list activity
-
-        ArrayAdapter adapter = new ArrayAdapter<String>(this, R.layout.textview_grocerylist, groceryList);
-
-        ListView listView = (ListView) findViewById(R.id.groceryList);
-        listView.setAdapter(adapter);
+//        //This is for the list view in the grocery list activity
+//
+//        ArrayAdapter adapter = new ArrayAdapter<String>(this, R.layout.textview_grocerylist, groceryList);
+//
+//        ListView listView = (ListView) findViewById(R.id.groceryList);
+//        listView.setAdapter(adapter);
 
 
 
@@ -110,6 +114,7 @@ public class GroceryList extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //Create Save Method Here
+                groceryListArray.add(new_item_name);
             }
         });
         cancel_item_window.setOnClickListener(new View.OnClickListener() {
