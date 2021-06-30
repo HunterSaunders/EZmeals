@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.os.Handler;
 
 import com.google.gson.Gson;
-
 import java.util.List;
 import java.util.Properties;
 
