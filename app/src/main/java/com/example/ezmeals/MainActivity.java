@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Properties;
 
 public class MainActivity extends AppCompatActivity {
-
+    
     private static int SPLASH_SCREEN_TIME_OUT = 4000;
 
     //Get key and app id from properties
