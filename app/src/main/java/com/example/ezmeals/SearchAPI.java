@@ -6,15 +6,32 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class SearchAPI extends AppCompatActivity {
+
+    ////////
+    String[] testArray = {"Chicken","Carrots"};//test listview
+    int photos[] = {R.drawable.ic_ez_logo, R.drawable.ic_ez_logo};
+    ListView testList;
+    ////////
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_api);
+
+        // Create listView for recipe search results. Set up to show recipe title and photo
+        testList = (ListView) findViewById(R.id.recipe_search_list);
+        CustomAdapter customAdapter = new CustomAdapter(getApplicationContext(),testArray, photos);
+        testList.setAdapter(customAdapter);
+
         getSupportActionBar().setTitle("Find A Recipe");
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_nav);
@@ -37,5 +54,8 @@ public class SearchAPI extends AppCompatActivity {
                 return false;
             }
         });
+
     }
+
+
 }
