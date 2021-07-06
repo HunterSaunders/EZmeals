@@ -9,7 +9,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.EZmeals">
-        <activity android:name=".GroceryList"></activity>
+        <activity android:name=".GroceryList" />
         <activity android:name=".SearchAPI" />
         <activity android:name=".Home" />
         <activity android:name=".MainActivity">
