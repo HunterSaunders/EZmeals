@@ -1,6 +1,8 @@
 package com.example.ezmeals;
 
-// Custom adapter to show recipe names and photos in recipe search -followed tutorial at abhiandroid.com/ui/listview
+// Custom adapter to show recipe names and photos in recipe search
+// - made to test the test list for listView on activity_search_api - may not be needed
+// -followed tutorial at abhiandroid.com/ui/listview
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -16,10 +18,10 @@ public class CustomAdapter extends BaseAdapter {
     int photos[];
     LayoutInflater inflater;
 
-    public CustomAdapter(Context applicationContext, String[] testArray, int[] photos) {
+    public CustomAdapter(Context applicationContext, String[] testArray/*, int[] photos*/) {
         this.context = context;
         this.testArray = testArray;
-        this.photos = photos;
+//        this.photos = photos;
         inflater = (LayoutInflater.from(applicationContext));
     }
 
@@ -42,9 +44,9 @@ public class CustomAdapter extends BaseAdapter {
     public View getView(int i, View view, ViewGroup viewGroup) {
         view = inflater.inflate(R.layout.textview_recipelist, null);
         TextView recipe = (TextView) view.findViewById(R.id.recipe_textview);
-        ImageView icon = (ImageView) view.findViewById(R.id.icon);
+//        ImageView icon = (ImageView) view.findViewById(R.id.image);
         recipe.setText(testArray[i]);
-        icon.setImageResource(photos[i]);
+//        icon.setImageResource(photos[i]);
         return view;
     }
 }
