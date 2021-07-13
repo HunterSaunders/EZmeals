@@ -5,9 +5,12 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Bundle;
+import android.preference.Preference;
+import android.preference.PreferenceManager;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -20,16 +23,24 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class GroceryList extends AppCompatActivity {
 
     ////////
-    List<String> groceryList;
+    ArrayList<String> groceryList;
     ArrayAdapter<String> arrayAdapter;
     ListView listView;
+
+    private SharedPreferences appPreferences;
+    private SharedPreferences.Editor preferenceEditor;
     ////////
 
     @Override
@@ -37,6 +48,8 @@ public class GroceryList extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_grocery_list);
         getSupportActionBar().setTitle("My Grocery List");
+
+        loadData();
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_nav);
         bottomNavigationView.setSelectedItemId(android.R.id.home);
@@ -58,7 +71,7 @@ public class GroceryList extends AppCompatActivity {
                 return false;
             }
         });
-        ////////
+
         groceryList = new ArrayList<>();
         arrayAdapter = new ArrayAdapter<>(this, R.layout.grocery_view_layout, groceryList);
         listView = findViewById(R.id.grocery_list_view);
@@ -78,8 +91,10 @@ public class GroceryList extends AppCompatActivity {
                 }
             }
         });
-        ////////
+
+
     }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu){
         MenuInflater inflater = getMenuInflater();
@@ -91,11 +106,9 @@ public class GroceryList extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem menuItem){
         int id = menuItem.getItemId();
         if (id == R.id.add_item){
-            //Toast.makeText(getApplicationContext(),"Add Item", Toast.LENGTH_SHORT).show();
             AddNewItemPopUp();
         }
         if (id == R.id.clear_list){
-            //Toast.makeText(getApplicationContext(),"Clear List", Toast.LENGTH_SHORT).show();
             ClearGroceryList();
         }
         return super.onOptionsItemSelected(menuItem);
@@ -129,9 +142,9 @@ public class GroceryList extends AppCompatActivity {
         save_new_item.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 groceryList.add(new_item_name.getText().toString());
-                System.out.println(groceryList);
-                arrayAdapter.notifyDataSetChanged();
+                saveData();
                 new_item_name.setText("");
                 dialog.dismiss();
             }
@@ -142,6 +155,33 @@ public class GroceryList extends AppCompatActivity {
                 dialog.dismiss();
             }
         });
+    }
+
+    public void saveData(){
+        appPreferences = getSharedPreferences("Shared Preferences", MODE_PRIVATE);
+        preferenceEditor = appPreferences.edit();
+        Gson gson = new Gson();
+        String json = gson.toJson(groceryList);
+        preferenceEditor.putString("Grocery List", json);
+        preferenceEditor.apply();
+
+        loadData();
+        arrayAdapter.notifyDataSetChanged();
+    }
+
+    public void loadData(){
+        appPreferences = getSharedPreferences("Shared Preferences", MODE_PRIVATE);
+        Gson gson = new Gson();
+        String json = appPreferences.getString("Grocery List", null);
+        Type type = new TypeToken<ArrayList<String>>() {}.getType();
+
+
+//       groceryList = Collections.singletonList(gson.toJson(json, type));
+//
+//        if (groceryList == null){
+//            groceryList = new ArrayList<>();
+//        }
+
     }
 
     public void ClearGroceryList(){

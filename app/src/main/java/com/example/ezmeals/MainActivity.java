@@ -7,10 +7,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 
-import com.google.gson.Gson;
-import java.util.List;
-import java.util.Properties;
-
 public class MainActivity extends AppCompatActivity {
     
     private static int SPLASH_SCREEN_TIME_OUT = 4000;
