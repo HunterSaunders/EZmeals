@@ -53,8 +53,12 @@ public class GroceryList extends AppCompatActivity {
         setContentView(R.layout.activity_grocery_list);
         getSupportActionBar().setTitle("My Grocery List");
 
+        groceryList = new ArrayList<>();
+        arrayAdapter = new ArrayAdapter<>(this, R.layout.grocery_view_layout, groceryList);
+        listView = findViewById(R.id.grocery_list_view);
+        listView.setAdapter(arrayAdapter);
+
         try {
-            groceryList = new ArrayList<>();
             setGroceries();
         } catch (JSONException e) {
             e.printStackTrace();
@@ -81,10 +85,6 @@ public class GroceryList extends AppCompatActivity {
             }
         });
 
-
-        arrayAdapter = new ArrayAdapter<>(this, R.layout.grocery_view_layout, groceryList);
-        listView = findViewById(R.id.grocery_list_view);
-        listView.setAdapter(arrayAdapter);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -173,6 +173,7 @@ public class GroceryList extends AppCompatActivity {
     }
 
     public void saveData(String item) throws JSONException {
+        groceryList.clear();
         groceryItemsList.add(new GroceryItem(item));
         SharedPreferences sharedPreferences = getSharedPreferences("shared preferences", MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -210,6 +211,8 @@ public class GroceryList extends AppCompatActivity {
                 String loadedItem = objectItem.getString("itemName");
                 groceryItemsList.add(new GroceryItem(loadedItem));
             }
+
+            loadData();
         }
 
     }
