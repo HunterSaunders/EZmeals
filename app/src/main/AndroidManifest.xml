@@ -10,6 +10,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.EZmeals">
+        <activity android:name=".RecipeDisplayActivity" />
         <activity android:name=".GroceryList" />
         <activity android:name=".SearchAPI" />
         <activity android:name=".Home" />
@@ -20,6 +21,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
     </application>
 
 </manifest>

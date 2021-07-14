@@ -9,7 +9,8 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Bundle;
-import android.util.Log;
+import android.preference.Preference;
+import android.preference.PreferenceManager;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -20,23 +21,30 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
-import java.io.Serializable;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 public class GroceryList extends AppCompatActivity {
 
     ////////
-    ArrayAdapter<String> arrayAdapter;
     ArrayList<String> groceryList;
+    ArrayList<GroceryItem> groceryItemsList;
+    ArrayAdapter<String> arrayAdapter;
     ListView listView;
-    SharedPreferences sharedPreferences;
+
+    private SharedPreferences appPreferences;
+    private SharedPreferences.Editor preferenceEditor;
     ////////
 
     @Override
@@ -44,24 +52,28 @@ public class GroceryList extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_grocery_list);
         getSupportActionBar().setTitle("My Grocery List");
-        if (savedInstanceState != null){
-            String message = savedInstanceState.getString("message");
-            Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+
+        try {
+            groceryList = new ArrayList<>();
+            setGroceries();
+            loadData();
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_nav);
         bottomNavigationView.setSelectedItemId(android.R.id.home);
-        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener(){
             @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-                switch (menuItem.getItemId()) {
+            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem){
+                switch (menuItem.getItemId()){
                     case R.id.home:
                         startActivity(new Intent(getApplicationContext(), Home.class));
-                        overridePendingTransition(0, 0);
+                        overridePendingTransition(0,0);
                         return true;
                     case R.id.search:
                         startActivity(new Intent(getApplicationContext(), SearchAPI.class));
-                        overridePendingTransition(0, 0);
+                        overridePendingTransition(0,0);
                         return true;
                     case R.id.list:
                         return true;
@@ -69,9 +81,8 @@ public class GroceryList extends AppCompatActivity {
                 return false;
             }
         });
-        ////////
-        sharedPreferences = getSharedPreferences("Grocery_list", MODE_PRIVATE);
-        groceryList = new ArrayList<>();
+
+
         arrayAdapter = new ArrayAdapter<>(this, R.layout.grocery_view_layout, groceryList);
         listView = findViewById(R.id.grocery_list_view);
         listView.setAdapter(arrayAdapter);
@@ -81,47 +92,33 @@ public class GroceryList extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 TextView textView = (TextView) view;
 
-                if (!textView.getPaint().isStrikeThruText()) {
+                if(!textView.getPaint().isStrikeThruText()){
                     textView.setPaintFlags(textView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-                    textView.setTextColor(Color.argb(50, 0, 0, 0));
-                } else {
-                    textView.setPaintFlags(textView.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
-                    textView.setTextColor(Color.rgb(0, 0, 0));
+                    textView.setTextColor(Color.argb(50,0,0,0));
+                } else{
+                    textView.setPaintFlags(textView.getPaintFlags() & (~ Paint.STRIKE_THRU_TEXT_FLAG));
+                    textView.setTextColor(Color.rgb(0,0,0));
                 }
             }
         });
-        ////////
-    }
-    private void packagesharedPrefernces(){
-        SharedPreferences.Editor myEdit = sharedPreferences.edit();
-        Set<String> set = new HashSet<String>();
-        set.addAll(groceryList);
-        myEdit.putStringSet("groceryList", set);
-        myEdit.apply();
-        Log.d("storesharedPreferences",""+set);
-    }
-    private void retrieveSharedValue(){
-        Set<String> set = sharedPreferences.getStringSet("groceryList", null);
-        groceryList.addAll(set);
-        Log.d("retsharedPreferences",""+set);
+
+
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public boolean onCreateOptionsMenu(Menu menu){
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.drop_selection, menu);
         return true;
     }
 
     @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem menuItem) {
+    public boolean onOptionsItemSelected(@NonNull MenuItem menuItem){
         int id = menuItem.getItemId();
-        if (id == R.id.add_item) {
-            //Toast.makeText(getApplicationContext(),"Add Item", Toast.LENGTH_SHORT).show();
+        if (id == R.id.add_item){
             AddNewItemPopUp();
         }
-        if (id == R.id.clear_list) {
-            //Toast.makeText(getApplicationContext(),"Clear List", Toast.LENGTH_SHORT).show();
+        if (id == R.id.clear_list){
             ClearGroceryList();
         }
         return super.onOptionsItemSelected(menuItem);
@@ -139,7 +136,7 @@ public class GroceryList extends AppCompatActivity {
     private Button cancel_clear_window;
 
 
-    public void AddNewItemPopUp() {
+    public void AddNewItemPopUp(){
         dialogBuilder = new AlertDialog.Builder(this);
         final View newItemPopUp = getLayoutInflater().inflate(R.layout.item_popup, null);
 
@@ -155,12 +152,17 @@ public class GroceryList extends AppCompatActivity {
         save_new_item.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                groceryList.add(new_item_name.getText().toString());
-                System.out.println(groceryList);
-                arrayAdapter.notifyDataSetChanged();
+                String newTextItem = new_item_name.getText().toString();
+                try {
+                    saveData(newTextItem);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
                 new_item_name.setText("");
                 dialog.dismiss();
+                arrayAdapter.notifyDataSetChanged();
             }
+
         });
         cancel_item_window.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -168,9 +170,51 @@ public class GroceryList extends AppCompatActivity {
                 dialog.dismiss();
             }
         });
+
     }
 
-    public void ClearGroceryList() {
+    public void saveData(String item) throws JSONException {
+        groceryItemsList.add(new GroceryItem(item));
+        SharedPreferences sharedPreferences = getSharedPreferences("shared preferences", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        Gson gson = new Gson();
+        String json = gson.toJson(groceryItemsList);
+        editor.putString("Grocery List", json);
+        editor.apply();
+
+        loadData();
+    }
+
+    public void loadData() throws JSONException {
+        SharedPreferences sharedPreferences = getSharedPreferences("shared preferences", MODE_PRIVATE);
+        String json = sharedPreferences.getString("Grocery List", null);
+
+        JSONArray jsonArray = new JSONArray(json);
+
+        for (int i = 0; i < jsonArray.length(); i++) {
+            JSONObject objectItem = jsonArray.getJSONObject(i);
+            String addedItem = objectItem.getString("itemName");
+            groceryList.add(addedItem);
+        }
+    }
+
+    public void setGroceries() throws JSONException {
+        groceryItemsList = new ArrayList<>();
+
+        SharedPreferences sharedPreferences = getSharedPreferences("shared preferences", MODE_PRIVATE);
+        String json = sharedPreferences.getString("Grocery List", null);
+
+        JSONArray jsonArray = new JSONArray(json);
+
+        for (int i = 0; i < jsonArray.length(); i++) {
+            JSONObject objectItem = jsonArray.getJSONObject(i);
+            String loadedItem = objectItem.getString("itemName");
+            groceryItemsList.add(new GroceryItem(loadedItem));
+        }
+
+    }
+
+    public void ClearGroceryList(){
         dialogBuilder = new AlertDialog.Builder(this);
         final View clearListPopUp = getLayoutInflater().inflate(R.layout.clear_popup, null);
 
@@ -185,10 +229,13 @@ public class GroceryList extends AppCompatActivity {
         clear_items.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                SharedPreferences sharedPreferences = getSharedPreferences("shared preferences", MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.clear();
+                editor.apply();
                 groceryList.clear();
                 dialog.dismiss();
                 arrayAdapter.notifyDataSetChanged();
-                System.out.println(groceryList);
             }
         });
         cancel_clear_window.setOnClickListener(new View.OnClickListener() {
