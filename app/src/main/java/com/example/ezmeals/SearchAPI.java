@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -20,6 +21,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.gson.Gson;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -44,6 +46,8 @@ public class SearchAPI extends AppCompatActivity {
     ArrayList<String> recipeItemsLinks;
     String searchTerm = "";
 
+    ArrayList<GroceryItem> groceryItemsList;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,6 +69,8 @@ public class SearchAPI extends AppCompatActivity {
                 // Instantiate the RequestQueue.
                 RequestQueue queue = Volley.newRequestQueue(SearchAPI.this);
                 String url = "https://api.edamam.com/api/recipes/v2?type=public&q=" + searchTerm + "&app_id=" + appId + "&app_key=" + key;
+
+               // "https://api.edamam.com/api/recipes/v2?type=public&q=chicken&app_id=fd8887ae&app_key=825f752fa9173a7e49f7223fac41f013"
 
                 JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
                     @Override
@@ -111,7 +117,7 @@ public class SearchAPI extends AppCompatActivity {
         recipeDisplayList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int i, long l) {
-                System.out.println(recipeItems.get(i));
+//                recipeItems.get(i);
                 Intent RecipeDisplayActivity = new Intent(SearchAPI.this, RecipeDisplayActivity.class);
                 RecipeDisplayActivity.putExtra(SRC_LINK, recipeItemsLinks.get(i));
                 startActivity(RecipeDisplayActivity);

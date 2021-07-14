@@ -16,6 +16,8 @@ import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -25,6 +27,7 @@ import static com.example.ezmeals.BuildConfig.api_key;
 public class RecipeDisplayActivity extends AppCompatActivity {
 
     JSONObject recipeData;
+    JSONArray recipeIngredients;
 
     private final String key = api_key;
     private final String appId = api_id;
@@ -56,6 +59,10 @@ public class RecipeDisplayActivity extends AppCompatActivity {
             public void onResponse(JSONObject response) {
                 try {
                     recipeData = response.getJSONObject("recipe");
+                    recipeIngredients = recipeData.getJSONArray("ingredientLines");
+
+
+                    System.out.println(recipeIngredients);
 
                     RequestOptions requestOptions=new RequestOptions();
                     requestOptions.placeholder(R.drawable.ic_ez_logo);
