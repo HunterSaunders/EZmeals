@@ -56,7 +56,6 @@ public class GroceryList extends AppCompatActivity {
         try {
             groceryList = new ArrayList<>();
             setGroceries();
-            loadData();
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -189,6 +188,8 @@ public class GroceryList extends AppCompatActivity {
         SharedPreferences sharedPreferences = getSharedPreferences("shared preferences", MODE_PRIVATE);
         String json = sharedPreferences.getString("Grocery List", null);
 
+
+
         JSONArray jsonArray = new JSONArray(json);
 
         for (int i = 0; i < jsonArray.length(); i++) {
@@ -204,12 +205,13 @@ public class GroceryList extends AppCompatActivity {
         SharedPreferences sharedPreferences = getSharedPreferences("shared preferences", MODE_PRIVATE);
         String json = sharedPreferences.getString("Grocery List", null);
 
+        if (json != null) {
         JSONArray jsonArray = new JSONArray(json);
-
-        for (int i = 0; i < jsonArray.length(); i++) {
-            JSONObject objectItem = jsonArray.getJSONObject(i);
-            String loadedItem = objectItem.getString("itemName");
-            groceryItemsList.add(new GroceryItem(loadedItem));
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject objectItem = jsonArray.getJSONObject(i);
+                String loadedItem = objectItem.getString("itemName");
+                groceryItemsList.add(new GroceryItem(loadedItem));
+            }
         }
 
     }
