@@ -26,13 +26,20 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 public class GroceryList extends AppCompatActivity {
 
     ////////
     ArrayList<String> groceryList;
+    ArrayList<GroceryItem> groceryItemsList;
     ArrayAdapter<String> arrayAdapter;
     ListView listView;
 
@@ -46,7 +53,13 @@ public class GroceryList extends AppCompatActivity {
         setContentView(R.layout.activity_grocery_list);
         getSupportActionBar().setTitle("My Grocery List");
 
-        loadData();
+        try {
+            groceryList = new ArrayList<>();
+            setGroceries();
+            loadData();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_nav);
         bottomNavigationView.setSelectedItemId(android.R.id.home);
@@ -69,7 +82,7 @@ public class GroceryList extends AppCompatActivity {
             }
         });
 
-        groceryList = new ArrayList<>();
+
         arrayAdapter = new ArrayAdapter<>(this, R.layout.grocery_view_layout, groceryList);
         listView = findViewById(R.id.grocery_list_view);
         listView.setAdapter(arrayAdapter);
@@ -139,12 +152,17 @@ public class GroceryList extends AppCompatActivity {
         save_new_item.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                groceryList.add(new_item_name.getText().toString());
-                saveData();
+                String newTextItem = new_item_name.getText().toString();
+                try {
+                    saveData(newTextItem);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
                 new_item_name.setText("");
                 dialog.dismiss();
+                arrayAdapter.notifyDataSetChanged();
             }
+
         });
         cancel_item_window.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -152,32 +170,47 @@ public class GroceryList extends AppCompatActivity {
                 dialog.dismiss();
             }
         });
+
     }
 
-    public void saveData(){
-        appPreferences = getSharedPreferences("Shared Preferences", MODE_PRIVATE);
-        preferenceEditor = appPreferences.edit();
+    public void saveData(String item) throws JSONException {
+        groceryItemsList.add(new GroceryItem(item));
+        SharedPreferences sharedPreferences = getSharedPreferences("shared preferences", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
         Gson gson = new Gson();
-        String json = gson.toJson(groceryList);
-        preferenceEditor.putString("Grocery List", json);
-        preferenceEditor.apply();
+        String json = gson.toJson(groceryItemsList);
+        editor.putString("Grocery List", json);
+        editor.apply();
 
         loadData();
-        arrayAdapter.notifyDataSetChanged();
     }
 
-    public void loadData(){
-        appPreferences = getSharedPreferences("Shared Preferences", MODE_PRIVATE);
-        Gson gson = new Gson();
-        String json = appPreferences.getString("Grocery List", null);
-        Type type = new TypeToken<ArrayList<String>>() {}.getType();
+    public void loadData() throws JSONException {
+        SharedPreferences sharedPreferences = getSharedPreferences("shared preferences", MODE_PRIVATE);
+        String json = sharedPreferences.getString("Grocery List", null);
 
+        JSONArray jsonArray = new JSONArray(json);
 
-//       groceryList = Collections.singletonList(gson.toJson(json, type));
-//
-//        if (groceryList == null){
-//            groceryList = new ArrayList<>();
-//        }
+        for (int i = 0; i < jsonArray.length(); i++) {
+            JSONObject objectItem = jsonArray.getJSONObject(i);
+            String addedItem = objectItem.getString("itemName");
+            groceryList.add(addedItem);
+        }
+    }
+
+    public void setGroceries() throws JSONException {
+        groceryItemsList = new ArrayList<>();
+
+        SharedPreferences sharedPreferences = getSharedPreferences("shared preferences", MODE_PRIVATE);
+        String json = sharedPreferences.getString("Grocery List", null);
+
+        JSONArray jsonArray = new JSONArray(json);
+
+        for (int i = 0; i < jsonArray.length(); i++) {
+            JSONObject objectItem = jsonArray.getJSONObject(i);
+            String loadedItem = objectItem.getString("itemName");
+            groceryItemsList.add(new GroceryItem(loadedItem));
+        }
 
     }
 
@@ -196,10 +229,13 @@ public class GroceryList extends AppCompatActivity {
         clear_items.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                SharedPreferences sharedPreferences = getSharedPreferences("shared preferences", MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.clear();
+                editor.apply();
                 groceryList.clear();
                 dialog.dismiss();
                 arrayAdapter.notifyDataSetChanged();
-                System.out.println(groceryList);
             }
         });
         cancel_clear_window.setOnClickListener(new View.OnClickListener() {
