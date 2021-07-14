@@ -188,8 +188,6 @@ public class GroceryList extends AppCompatActivity {
         SharedPreferences sharedPreferences = getSharedPreferences("shared preferences", MODE_PRIVATE);
         String json = sharedPreferences.getString("Grocery List", null);
 
-
-
         JSONArray jsonArray = new JSONArray(json);
 
         for (int i = 0; i < jsonArray.length(); i++) {
@@ -206,7 +204,7 @@ public class GroceryList extends AppCompatActivity {
         String json = sharedPreferences.getString("Grocery List", null);
 
         if (json != null) {
-        JSONArray jsonArray = new JSONArray(json);
+            JSONArray jsonArray = new JSONArray(json);
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject objectItem = jsonArray.getJSONObject(i);
                 String loadedItem = objectItem.getString("itemName");

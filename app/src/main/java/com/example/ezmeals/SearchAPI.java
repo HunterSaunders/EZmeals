@@ -66,6 +66,8 @@ public class SearchAPI extends AppCompatActivity {
                 RequestQueue queue = Volley.newRequestQueue(SearchAPI.this);
                 String url = "https://api.edamam.com/api/recipes/v2?type=public&q=" + searchTerm + "&app_id=" + appId + "&app_key=" + key;
 
+               // "https://api.edamam.com/api/recipes/v2?type=public&q=chicken&app_id=fd8887ae&app_key=825f752fa9173a7e49f7223fac41f013"
+
                 JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
