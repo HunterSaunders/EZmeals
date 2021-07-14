@@ -94,7 +94,7 @@ public class SearchAPI extends AppCompatActivity {
                             ArrayAdapter arrayAdapter = new ArrayAdapter(SearchAPI.this, android.R.layout.simple_list_item_1, recipeItems);
                             recipeDisplayList.setAdapter(arrayAdapter);
 
-                        }catch (JSONException e){
+                        } catch (JSONException e) {
                             e.printStackTrace();
                         }
                     }
