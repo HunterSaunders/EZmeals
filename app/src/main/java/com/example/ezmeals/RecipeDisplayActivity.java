@@ -36,11 +36,15 @@ public class RecipeDisplayActivity extends AppCompatActivity {
         setContentView(R.layout.recipe_screen);
         getSupportActionBar().setTitle("Recipe");
 
+
         Intent intent = getIntent();
         String recipeLink = intent.getStringExtra(SearchAPI.SRC_LINK);
 
 
         TextView recipeName = (TextView) findViewById(R.id.recipe_name);
+        TextView cuisineType = (TextView) findViewById(R.id.textView5);
+        TextView dishType = (TextView) findViewById(R.id.textView8);
+        TextView meal = (TextView) findViewById(R.id.textView10);
         ImageView recipeImage = (ImageView) findViewById(R.id.recipe_screen_img);
 
 
@@ -61,6 +65,9 @@ public class RecipeDisplayActivity extends AppCompatActivity {
                             .apply(requestOptions)
                             .into(recipeImage);
                     recipeName.setText(recipeData.getString("label"));
+                    cuisineType.setText(recipeData.getString("cuisineType"));
+                    dishType.setText(recipeData.getString("dishType"));
+                    meal.setText(recipeData.getString("mealType"));
 
                 }catch (JSONException e){
                     e.printStackTrace();
