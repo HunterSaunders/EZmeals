@@ -48,6 +48,7 @@ public class RecipeDisplayActivity extends AppCompatActivity {
         TextView cuisineType = (TextView) findViewById(R.id.textView5);
         TextView dishType = (TextView) findViewById(R.id.textView8);
         TextView meal = (TextView) findViewById(R.id.textView10);
+        TextView ingredients = (TextView) findViewById(R.id.textView12);
         ImageView recipeImage = (ImageView) findViewById(R.id.recipe_screen_img);
 
 
@@ -72,9 +73,10 @@ public class RecipeDisplayActivity extends AppCompatActivity {
                             .apply(requestOptions)
                             .into(recipeImage);
                     recipeName.setText(recipeData.getString("label"));
-                    cuisineType.setText(recipeData.getString("cuisineType"));
-                    dishType.setText(recipeData.getString("dishType"));
-                    meal.setText(recipeData.getString("mealType"));
+                    cuisineType.setText(recipeData.getString("cuisineType").replace("/","").replace("[","").replace("]","").replace("\\"," or ").replace("\"",""));
+                    dishType.setText(recipeData.getString("dishType").replace("/","").replace("[","").replace("]","").replace("\\"," or ").replace("\"",""));
+                    meal.setText(recipeData.getString("mealType").replace("/","").replace("[","").replace("]","").replace("\\","/").replace("\"",""));
+                    ingredients.setText(recipeData.getString("ingredientLines").replace("\"","\n").replace(",","").replace("[","").replace("]","").replace("\\",""));
 
                 }catch (JSONException e){
                     e.printStackTrace();
