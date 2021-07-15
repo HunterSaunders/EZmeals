@@ -2,9 +2,18 @@ package com.example.ezmeals;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationCompat;
+
+import android.app.AlertDialog;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.android.volley.Request;
@@ -31,6 +40,8 @@ public class RecipeDisplayActivity extends AppCompatActivity {
 
     private final String key = api_key;
     private final String appId = api_id;
+    private Button alertButton;
+    private TextView alertTextView;
 
 
     @Override
@@ -38,6 +49,36 @@ public class RecipeDisplayActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.recipe_screen);
         getSupportActionBar().setTitle("Recipe");
+
+        alertButton = (Button) findViewById(R.id.save_ingredients);
+        alertTextView = (TextView) findViewById(R.id.AlertTextView);
+
+        alertButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view){
+                AlertDialog.Builder builder = new AlertDialog.Builder(RecipeDisplayActivity.this);
+
+                builder.setCancelable(true);
+                builder.setTitle("EZmeals Alert");
+                builder.setMessage("Ingredients saved");
+
+                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.cancel();
+                    }
+                });
+
+                builder.setPositiveButton("View", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int i) {
+                        startActivity(new Intent(getApplicationContext(), GroceryList.class));
+                        overridePendingTransition(0, 0);
+                    }
+                });
+                builder.show();
+            }
+        });
 
 
         Intent intent = getIntent();
@@ -113,5 +154,4 @@ public class RecipeDisplayActivity extends AppCompatActivity {
             }
         });
     }
-
 }
