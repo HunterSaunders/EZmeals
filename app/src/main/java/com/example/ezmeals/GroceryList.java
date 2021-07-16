@@ -1,16 +1,11 @@
 package com.example.ezmeals;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Bundle;
-import android.preference.Preference;
-import android.preference.PreferenceManager;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -22,18 +17,17 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
 
 public class GroceryList extends AppCompatActivity {
 
@@ -53,8 +47,12 @@ public class GroceryList extends AppCompatActivity {
         setContentView(R.layout.activity_grocery_list);
         getSupportActionBar().setTitle("My Grocery List");
 
+        groceryList = new ArrayList<>();
+        arrayAdapter = new ArrayAdapter<>(this, R.layout.grocery_view_layout, groceryList);
+        listView = findViewById(R.id.grocery_list_view);
+        listView.setAdapter(arrayAdapter);
+
         try {
-            groceryList = new ArrayList<>();
             setGroceries();
         } catch (JSONException e) {
             e.printStackTrace();
@@ -81,10 +79,6 @@ public class GroceryList extends AppCompatActivity {
             }
         });
 
-
-        arrayAdapter = new ArrayAdapter<>(this, R.layout.grocery_view_layout, groceryList);
-        listView = findViewById(R.id.grocery_list_view);
-        listView.setAdapter(arrayAdapter);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -173,6 +167,7 @@ public class GroceryList extends AppCompatActivity {
     }
 
     public void saveData(String item) throws JSONException {
+        groceryList.clear();
         groceryItemsList.add(new GroceryItem(item));
         SharedPreferences sharedPreferences = getSharedPreferences("shared preferences", MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -187,8 +182,6 @@ public class GroceryList extends AppCompatActivity {
     public void loadData() throws JSONException {
         SharedPreferences sharedPreferences = getSharedPreferences("shared preferences", MODE_PRIVATE);
         String json = sharedPreferences.getString("Grocery List", null);
-
-
 
         JSONArray jsonArray = new JSONArray(json);
 
@@ -206,12 +199,14 @@ public class GroceryList extends AppCompatActivity {
         String json = sharedPreferences.getString("Grocery List", null);
 
         if (json != null) {
-        JSONArray jsonArray = new JSONArray(json);
+            JSONArray jsonArray = new JSONArray(json);
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject objectItem = jsonArray.getJSONObject(i);
                 String loadedItem = objectItem.getString("itemName");
                 groceryItemsList.add(new GroceryItem(loadedItem));
             }
+
+            loadData();
         }
 
     }

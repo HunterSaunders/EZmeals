@@ -1,14 +1,14 @@
 package com.example.ezmeals;
 
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 public class MainActivity extends AppCompatActivity {
-    
+
     private static int SPLASH_SCREEN_TIME_OUT = 4000;
 
 
@@ -29,4 +29,4 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    }
+}

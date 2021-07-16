@@ -1,8 +1,5 @@
 package com.example.ezmeals;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -12,6 +9,9 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -27,15 +27,15 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-import static com.example.ezmeals.BuildConfig.api_id;
 import static com.example.ezmeals.BuildConfig.api_key;
+import static com.example.ezmeals.BuildConfig.app_id;
 
 public class SearchAPI extends AppCompatActivity {
 
     public static final String SRC_LINK = "com.example.application.example.SRC_LINK";
 
     private final String key = api_key;
-    private final String appId = api_id;
+    private final String appId = app_id;
 
     Button searchAPIBtn;
     EditText apiSearch;
