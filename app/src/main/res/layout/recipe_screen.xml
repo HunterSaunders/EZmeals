@@ -52,7 +52,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginLeft="16dp"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="16dp"
         android:text="Ingredients:"
         android:textColor="#000000"
         android:textSize="16sp"
@@ -134,46 +134,31 @@
         app:layout_constraintTop_toBottomOf="@+id/textView4" />
 
 
-    <Button
-        android:id="@+id/save_ingredients"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:layout_marginLeft="32dp"
-        android:layout_marginTop="240dp"
-        android:text="Add to Grocery List"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.245"
-        app:layout_constraintStart_toEndOf="@+id/textView3"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/AlertTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/save_ingredients"
-        android:layout_centerHorizontal="true"
-        android:layout_marginStart="180dp"
-        android:layout_marginLeft="180dp"
-        android:layout_marginTop="300dp"
-        android:text="Ingredients Saved!"
-        android:textSize="20sp"
-        android:visibility="invisible"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <ListView
         android:id="@+id/ingredientListView"
-        android:layout_width="325dp"
-        android:layout_height="268dp"
-        android:layout_marginStart="40dp"
-        android:layout_marginLeft="40dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="46dp"
-        android:layout_marginRight="46dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="16dp"
+        android:paddingHorizontal="16dp"
+        app:layout_constraintBottom_toTopOf="@+id/bottom_nav"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/AlertTextView" />
+        app:layout_constraintTop_toBottomOf="@+id/textView3" />
+
+    <TextView
+        android:id="@+id/addNote"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:text="Tap Ingredient To Add To Grocery List"
+        android:textColor="@color/primary"
+        android:textSize="10sp"
+        android:textStyle="italic"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView9" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
