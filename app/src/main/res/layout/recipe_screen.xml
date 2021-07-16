@@ -160,5 +160,17 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView9" />
 
+    <Button
+        android:id="@+id/instructions_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Go To Recipe Instructions"
+        android:backgroundTint="@color/secondary"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toTopOf="@+id/recipe_name"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/recipe_screen_img"
+        app:layout_constraintTop_toTopOf="parent" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

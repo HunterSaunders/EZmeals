@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -67,6 +68,7 @@ public class RecipeDisplayActivity extends AppCompatActivity {
         TextView dishType = (TextView) findViewById(R.id.textView8);
         TextView meal = (TextView) findViewById(R.id.textView10);
         ImageView recipeImage = (ImageView) findViewById(R.id.recipe_screen_img);
+        Button urlBtn = (Button) findViewById(R.id.instructions_btn);
 
         RequestQueue queue = Volley.newRequestQueue(RecipeDisplayActivity.this);
         String url = "https://api.edamam.com/api/recipes/v2/" + recipeLink + "?type=public&app_id=" + appId + "&app_key=" + key;
@@ -100,6 +102,19 @@ public class RecipeDisplayActivity extends AppCompatActivity {
                     cuisineType.setText(recipeData.getString("cuisineType").replace("/","").replace("[","").replace("]","").replace("\\"," or ").replace("\"",""));
                     dishType.setText(recipeData.getString("dishType").replace("/","").replace("[","").replace("]","").replace("\\"," or ").replace("\"",""));
                     meal.setText(recipeData.getString("mealType").replace("/","").replace("[","").replace("]","").replace("\\","/").replace("\"",""));
+                    urlBtn.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent intent = new Intent(Intent.ACTION_VIEW);
+                            try {
+                                intent.setData(Uri.parse(recipeData.getString("url")));
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                            startActivity(intent);
+                        }
+                    });
+
 
                     ArrayAdapter arrayAdapter = new ArrayAdapter(RecipeDisplayActivity.this, android.R.layout.simple_list_item_1, ingredientList);
                     lv.setAdapter(arrayAdapter);
