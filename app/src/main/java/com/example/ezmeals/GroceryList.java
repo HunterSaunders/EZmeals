@@ -55,7 +55,7 @@ public class GroceryList extends AppCompatActivity {
         try {
             setGroceries();
         } catch (JSONException e) {
-            e.printStackTrace();
+                e.printStackTrace();
         }
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_nav);
@@ -193,7 +193,12 @@ public class GroceryList extends AppCompatActivity {
     }
 
     public void setGroceries() throws JSONException {
-        groceryItemsList = new ArrayList<>();
+        if (groceryItemsList != null){
+            loadData();
+        }
+        else {
+            groceryItemsList = new ArrayList<>();
+        }
 
         SharedPreferences sharedPreferences = getSharedPreferences("shared preferences", MODE_PRIVATE);
         String json = sharedPreferences.getString("Grocery List", null);
@@ -230,6 +235,7 @@ public class GroceryList extends AppCompatActivity {
                 SharedPreferences.Editor editor = sharedPreferences.edit();
                 editor.clear();
                 editor.apply();
+                groceryItemsList.clear();
                 groceryList.clear();
                 dialog.dismiss();
                 arrayAdapter.notifyDataSetChanged();

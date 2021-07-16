@@ -1,15 +1,14 @@
 package com.example.ezmeals;
 
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
-import android.text.method.ScrollingMovementMethod;
 import android.view.MenuItem;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.android.volley.Request;
@@ -29,8 +28,8 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.example.ezmeals.BuildConfig.api_id;
 import static com.example.ezmeals.BuildConfig.api_key;
-import static com.example.ezmeals.BuildConfig.app_id;
 
 public class RecipeDisplayActivity extends AppCompatActivity {
 
@@ -38,7 +37,9 @@ public class RecipeDisplayActivity extends AppCompatActivity {
     JSONArray recipeIngredients;
 
     private final String key = api_key;
-    private final String appId = app_id;
+    private final String appId = api_id;
+    private Button alertButton;
+    private TextView alertTextView;
 
 
     @Override
@@ -46,6 +47,42 @@ public class RecipeDisplayActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.recipe_screen);
         getSupportActionBar().setTitle("Recipe");
+
+        ListView lv = (ListView) findViewById(R.id.ingredientListView);
+        List<String> ingredientList = new ArrayList<String>();
+
+
+
+
+        //alertButton = (Button) findViewById(R.id.save_ingredients);
+        //alertTextView = (TextView) findViewById(R.id.AlertTextView);
+
+//        alertButton.setOnClickListener(new View.OnClickListener(){
+//            @Override
+//            public void onClick(View view){
+//                AlertDialog.Builder builder = new AlertDialog.Builder(RecipeDisplayActivity.this);
+//
+//                builder.setCancelable(true);
+//                builder.setTitle("EZmeals Alert");
+//                builder.setMessage("Ingredients saved");
+//
+//                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialogInterface, int i) {
+//                        dialogInterface.cancel();
+//                    }
+//                });
+//
+//                builder.setPositiveButton("View", new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int i) {
+//                        startActivity(new Intent(getApplicationContext(), GroceryList.class));
+//                        overridePendingTransition(0, 0);
+//                    }
+//                });
+//                builder.show();
+//            }
+//        });
 
 
         Intent intent = getIntent();
@@ -56,32 +93,31 @@ public class RecipeDisplayActivity extends AppCompatActivity {
         TextView cuisineType = (TextView) findViewById(R.id.textView5);
         TextView dishType = (TextView) findViewById(R.id.textView8);
         TextView meal = (TextView) findViewById(R.id.textView10);
-        TextView ingredientList = (TextView) findViewById(R.id.textView12);
+        //TextView ingredients = (TextView) findViewById(R.id.textView12);
         ImageView recipeImage = (ImageView) findViewById(R.id.recipe_screen_img);
 
 
         RequestQueue queue = Volley.newRequestQueue(RecipeDisplayActivity.this);
         String url = "https://api.edamam.com/api/recipes/v2/" + recipeLink + "?type=public&app_id=" + appId + "&app_key=" + key;
 
+
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
-            @RequiresApi(api = Build.VERSION_CODES.KITKAT)
             @Override
             public void onResponse(JSONObject response) {
                 try {
                     recipeData = response.getJSONObject("recipe");
+                    recipeIngredients = recipeData.getJSONArray("ingredientLines");
                     JSONArray recipeIngredients = recipeData.getJSONArray("ingredientLines");
-                    List<String> ingredients = new ArrayList<String>();
+
 
 
                     if (recipeIngredients != null) {
                         int len = recipeIngredients.length();
                         for (int i=0;i<len;i++){
-                            ingredients.add(recipeIngredients.get(i).toString());
+                            ingredientList.add(recipeIngredients.get(i).toString());
                         }
                     }
 
-
-                    System.out.println(ingredients);
 
 
                     RequestOptions requestOptions=new RequestOptions();
@@ -92,26 +128,21 @@ public class RecipeDisplayActivity extends AppCompatActivity {
                             .apply(requestOptions)
                             .into(recipeImage);
                     recipeName.setText(recipeData.getString("label"));
-                    cuisineType.setText(recipeData.getString("cuisineType"));
-                    dishType.setText(recipeData.getString("dishType"));
-                    meal.setText(recipeData.getString("mealType"));
-
+                    cuisineType.setText(recipeData.getString("cuisineType").replace("/","").replace("[","").replace("]","").replace("\\"," or ").replace("\"",""));
+                    dishType.setText(recipeData.getString("dishType").replace("/","").replace("[","").replace("]","").replace("\\"," or ").replace("\"",""));
+                    meal.setText(recipeData.getString("mealType").replace("/","").replace("[","").replace("]","").replace("\\","/").replace("\"",""));
+                    //ingredients.setText(recipeData.getString("ingredientLines").replace("\"","\n").replace(",","").replace("[","").replace("]","").replace("\\",""));
                     StringBuilder builder = new StringBuilder();
-                    for (String details : ingredients) {
+                    for (String details : ingredientList) {
                         builder.append(details + "\n" + "\n");
                     }
-                    ingredientList.setText(builder.toString());
-                    ingredientList.setMovementMethod(new ScrollingMovementMethod());
-
-
-
-
-
+                    //ingredients.setText(builder.toString());
 
 
                 }catch (JSONException e){
                     e.printStackTrace();
                 }
+
             }
         }, new Response.ErrorListener() {
             @Override
@@ -119,7 +150,17 @@ public class RecipeDisplayActivity extends AppCompatActivity {
                 System.out.println("Error");
             }
         });
+
+        //Custom Adapter from CustomAdapter class -- ingredient_row.xml is textview with button layout for the row of the ingredient listview
+
+        CustomAdapter customAdapter = new CustomAdapter(this, R.id.ingredient_textview, ingredientList, lv);
+
+        lv.setAdapter(customAdapter);
+        System.out.println(ingredientList);
+
         queue.add(request);
+
+
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_nav);
         bottomNavigationView.setSelectedItemId(android.R.id.home);
@@ -144,5 +185,4 @@ public class RecipeDisplayActivity extends AppCompatActivity {
             }
         });
     }
-
 }

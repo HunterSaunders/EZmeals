@@ -28,14 +28,14 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 import static com.example.ezmeals.BuildConfig.api_key;
-import static com.example.ezmeals.BuildConfig.app_id;
+import static com.example.ezmeals.BuildConfig.api_id;
 
 public class SearchAPI extends AppCompatActivity {
 
     public static final String SRC_LINK = "com.example.application.example.SRC_LINK";
 
     private final String key = api_key;
-    private final String appId = app_id;
+    private final String appId = api_id;
 
     Button searchAPIBtn;
     EditText apiSearch;
@@ -43,6 +43,8 @@ public class SearchAPI extends AppCompatActivity {
     ArrayList<String> recipeItems;
     ArrayList<String> recipeItemsLinks;
     String searchTerm = "";
+
+    ArrayList<GroceryItem> groceryItemsList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +67,8 @@ public class SearchAPI extends AppCompatActivity {
                 // Instantiate the RequestQueue.
                 RequestQueue queue = Volley.newRequestQueue(SearchAPI.this);
                 String url = "https://api.edamam.com/api/recipes/v2?type=public&q=" + searchTerm + "&app_id=" + appId + "&app_key=" + key;
+
+               // "https://api.edamam.com/api/recipes/v2?type=public&q=chicken&app_id=fd8887ae&app_key=825f752fa9173a7e49f7223fac41f013"
 
                 JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
                     @Override
@@ -111,7 +115,7 @@ public class SearchAPI extends AppCompatActivity {
         recipeDisplayList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int i, long l) {
-                System.out.println(recipeItems.get(i));
+//                recipeItems.get(i);
                 Intent RecipeDisplayActivity = new Intent(SearchAPI.this, RecipeDisplayActivity.class);
                 RecipeDisplayActivity.putExtra(SRC_LINK, recipeItemsLinks.get(i));
                 startActivity(RecipeDisplayActivity);
