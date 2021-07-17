@@ -34,9 +34,11 @@ public class SearchAPI extends AppCompatActivity {
 
     public static final String SRC_LINK = "com.example.application.example.SRC_LINK";
 
+//    pull API key info from BuildConfig to keep hidden
     private final String key = api_key;
     private final String appId = api_id;
 
+//    Variables
     Button searchAPIBtn;
     EditText apiSearch;
     ListView recipeDisplayList;
@@ -68,8 +70,8 @@ public class SearchAPI extends AppCompatActivity {
                 RequestQueue queue = Volley.newRequestQueue(SearchAPI.this);
                 String url = "https://api.edamam.com/api/recipes/v2?type=public&q=" + searchTerm + "&app_id=" + appId + "&app_key=" + key;
 
-               // "https://api.edamam.com/api/recipes/v2?type=public&q=chicken&app_id=fd8887ae&app_key=825f752fa9173a7e49f7223fac41f013"
 
+                //Get info from Edamam api and parse JSON info
                 JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
@@ -94,7 +96,7 @@ public class SearchAPI extends AppCompatActivity {
 //                                System.out.println(recipeItems);
                             }
 
-                            //System.out.println(recipeItems);
+                            //display to list view
                             ArrayAdapter arrayAdapter = new ArrayAdapter(SearchAPI.this, android.R.layout.simple_list_item_1, recipeItems);
                             recipeDisplayList.setAdapter(arrayAdapter);
 
@@ -111,7 +113,7 @@ public class SearchAPI extends AppCompatActivity {
                 queue.add(request);
             }
         });
-
+        //Click listener for recipe search button
         recipeDisplayList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int i, long l) {
