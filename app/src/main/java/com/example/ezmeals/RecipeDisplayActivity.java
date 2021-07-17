@@ -116,7 +116,7 @@ public class RecipeDisplayActivity extends AppCompatActivity {
 
                     ArrayAdapter arrayAdapter = new ArrayAdapter(RecipeDisplayActivity.this, android.R.layout.simple_list_item_1, ingredientList);
                     lv.setAdapter(arrayAdapter);
-                // click to save items to grocery list
+
                     lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                         @Override
                         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
