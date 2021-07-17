@@ -31,15 +31,10 @@ import java.util.ArrayList;
 
 public class GroceryList extends AppCompatActivity {
 
-    ////////
     ArrayList<String> groceryList;
     ArrayList<GroceryItem> groceryItemsList;
     ArrayAdapter<String> arrayAdapter;
     ListView listView;
-
-    private SharedPreferences appPreferences;
-    private SharedPreferences.Editor preferenceEditor;
-    ////////
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,7 +52,7 @@ public class GroceryList extends AppCompatActivity {
         } catch (JSONException e) {
                 e.printStackTrace();
         }
-
+        //Bottom tab navigation
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_nav);
         bottomNavigationView.setSelectedItemId(android.R.id.home);
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener(){
@@ -79,7 +74,7 @@ public class GroceryList extends AppCompatActivity {
             }
         });
 
-
+        // Created an onclick event for each individual item in the grocery list
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -98,6 +93,7 @@ public class GroceryList extends AppCompatActivity {
 
     }
 
+    //Creates upper right pop-up menu
     @Override
     public boolean onCreateOptionsMenu(Menu menu){
         MenuInflater inflater = getMenuInflater();
@@ -128,7 +124,7 @@ public class GroceryList extends AppCompatActivity {
     private Button clear_items;
     private Button cancel_clear_window;
 
-
+    //Shows pop up window for adding an item to grocery list
     public void AddNewItemPopUp(){
         dialogBuilder = new AlertDialog.Builder(this);
         final View newItemPopUp = getLayoutInflater().inflate(R.layout.item_popup, null);
@@ -142,6 +138,7 @@ public class GroceryList extends AppCompatActivity {
         dialog = dialogBuilder.create();
         dialog.show();
 
+        //Save Item from pop up window
         save_new_item.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -166,6 +163,8 @@ public class GroceryList extends AppCompatActivity {
 
     }
 
+
+    //Function Saves data to local shared preferences
     public void saveData(String item) throws JSONException {
         groceryList.clear();
         groceryItemsList.add(new GroceryItem(item));
@@ -179,6 +178,7 @@ public class GroceryList extends AppCompatActivity {
         loadData();
     }
 
+        //Loads data from the sharedpreferences to the current activity
     public void loadData() throws JSONException {
         SharedPreferences sharedPreferences = getSharedPreferences("shared preferences", MODE_PRIVATE);
         String json = sharedPreferences.getString("Grocery List", null);
@@ -192,6 +192,7 @@ public class GroceryList extends AppCompatActivity {
         }
     }
 
+    //Checks to see if shared preference file already exists or needs to be created
     public void setGroceries() throws JSONException {
         if (groceryItemsList != null){
             loadData();
@@ -216,6 +217,7 @@ public class GroceryList extends AppCompatActivity {
 
     }
 
+        //Clears current grocery list and shared preferences
     public void ClearGroceryList(){
         dialogBuilder = new AlertDialog.Builder(this);
         final View clearListPopUp = getLayoutInflater().inflate(R.layout.clear_popup, null);
